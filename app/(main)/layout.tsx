@@ -1,4 +1,5 @@
 import Providers from "@/core/provider";
+import ThemeRegistry from "@/theme";
 
 export default function MainLayout({
   children,
@@ -6,6 +7,10 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return <Providers>
-    {children}
+    <ThemeRegistry>
+      <main>
+        {children}
+      </main>
+    </ThemeRegistry>
   </Providers>;
 }
