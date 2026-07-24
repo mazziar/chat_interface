@@ -17,7 +17,7 @@ export default function ChatLayout({
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, ${isDarkTheme ? 0 : 0.6}), rgba(0, 0, 0, ${isDarkTheme ? 0 : 0.6})), url('/Body BG.png')`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, ${isDarkTheme ? 0.6 : 0}), rgba(0, 0, 0, ${isDarkTheme ? 0 : 0})), url('/Body BG.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

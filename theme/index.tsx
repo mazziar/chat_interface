@@ -22,8 +22,8 @@ export default function ThemeRegistry({
   children: React.ReactNode;
 }) {
   const isDarkTheme = useAppSelector((state) => state.settingSlice.darkTheme);
-  const palette = !isDarkTheme ? darkTheme : lightTheme;
-  const shadows = !isDarkTheme ? shadowsDark : shadowsLight;
+  const palette = isDarkTheme ? darkTheme : lightTheme;
+  const shadows = isDarkTheme ? shadowsDark : shadowsLight;
 
   const themeOptions: any = useMemo(
     () => ({

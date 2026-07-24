@@ -1,6 +1,8 @@
-import Providers from "@/core/provider";
 import ThemeRegistry from "@/theme";
 import MainLayout from "@/ui/layout/mainLayout";
+import dynamic from "next/dynamic";
+
+const Providers = dynamic(() => import('../../core/provider'), { ssr: !!false });
 
 export default function AppLayout({
   children,
