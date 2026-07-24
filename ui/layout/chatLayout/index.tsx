@@ -16,14 +16,14 @@ export default function ChatLayout({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100vh',
+        height: '100vh',
         backgroundImage: `linear-gradient(rgba(0, 0, 0, ${isDarkTheme ? 0.6 : 0}), rgba(0, 0, 0, ${isDarkTheme ? 0 : 0})), url('/Body BG.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <Box sx={{ flex: 1, overflowY: 'auto', p: 2 }}>
+      <Box sx={{ flex: 1, overflowY: 'auto', p: 2, pt: 12 }}>
         {children}
       </Box>
 

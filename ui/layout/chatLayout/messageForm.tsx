@@ -2,12 +2,17 @@
 
 import { useState } from 'react';
 import { Stack, TextField, Button } from '@mui/material';
+import { useAppSelector } from '@/core/hooks';
+import { usePostMessageMutation } from '@/core/services/user/messagesApi';
 
 export default function MessageForm() {
   const [message, setMessage] = useState('');
+  const author = useAppSelector((state) => state.sessionSlice.name);
+  const [postMessage, { isLoading }] = usePostMessageMutation();
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!message.trim()) return;
+    await postMessage({ message: message.trim(), author }).unwrap();
     setMessage('');
   };
 
@@ -23,6 +28,7 @@ export default function MessageForm() {
         size="small"
         placeholder="Type a message..."
         value={message}
+        disabled={isLoading}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
@@ -33,7 +39,7 @@ export default function MessageForm() {
         sx={{ bgcolor: 'background.paper', borderRadius: 1 }}
       />
 
-      <Button color="secondary" variant='contained' onClick={handleSend} aria-label="Send message">
+      <Button color="secondary" variant='contained' onClick={handleSend} loading={isLoading} aria-label="Send message">
         Send
       </Button>
     </Stack>

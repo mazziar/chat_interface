@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Grid, TextField, Button, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/core/hooks';
-import { setName } from '@/core/features/sessionSlice';
+import { setName, setToken } from '@/core/features/sessionSlice';
 
 const generateGuestName = () => `Guest${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -22,6 +22,7 @@ export default function MainPage() {
 
   const startWithName = (newName: string) => {
     dispatch(setName(newName));
+    dispatch(setToken('super-secret-doodle-token'));
     router.push('/chat');
   };
 

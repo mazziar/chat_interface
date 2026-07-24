@@ -1,2 +1,2 @@
-export const cachedUrl = 'http://localhsot:3000';
+export const cachedUrl = 'http://localhost:3000';
 
