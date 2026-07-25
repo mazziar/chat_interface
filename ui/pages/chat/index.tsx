@@ -61,17 +61,20 @@ export default function ChatPage() {
             sx={{
               alignSelf: isOwn ? 'flex-end' : 'flex-start',
               maxWidth: '75%',
-              bgcolor: isOwn ? 'secondary.main' : 'background.paper',
-              borderRadius: 2,
+              bgcolor: isOwn ? 'background.neutral' : 'background.paper',
+              borderRadius: 1,
+              border: theme => `2px solid ${theme.palette.divider}`,
               px: 2,
-              py: 1,
+              py: 1.5,
             }}
           >
-            <Typography variant="caption" sx={{ fontWeight: 'bold', display: 'block' }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {msg.author}
             </Typography>
-            <Typography variant="body2">{msg.message}</Typography>
-            <Typography variant="caption" sx={{ display: 'block', textAlign: 'right', opacity: 0.7 }}>
+
+            <Typography variant="body2" sx={{ fontWeight: 'bold', display: 'block' }}>{msg.message}</Typography>
+
+            <Typography variant="caption" sx={{ display: 'block', textAlign: 'right', color: 'text.secondary' }}>
               {formatDateTime(msg.createdAt)}
             </Typography>
           </Box>

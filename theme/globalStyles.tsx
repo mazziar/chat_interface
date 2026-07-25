@@ -19,6 +19,23 @@ export default function GlobalStyles() {
           boxSizing: 'border-box',
           direction: theme.direction,
           fontFamily: `${enFont.style.fontFamily} !important`,
+          scrollbarWidth: 'thin',
+          scrollbarColor: `${theme.palette.grey[500]} transparent`,
+        },
+        '*::-webkit-scrollbar': {
+          width: 8,
+          height: 8,
+        },
+        '*::-webkit-scrollbar-track': {
+          backgroundColor: 'transparent',
+        },
+        '*::-webkit-scrollbar-thumb': {
+          backgroundColor: theme.palette.grey[500],
+          borderRadius: 8,
+          border: `2px solid ${theme.palette.background.default}`,
+        },
+        '*::-webkit-scrollbar-thumb:hover': {
+          backgroundColor: theme.palette.grey[600],
         },
         '& :-webkit-autofill': {
           transitionDelay: '999999s',
