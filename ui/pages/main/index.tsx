@@ -57,6 +57,7 @@ export default function MainPage() {
           <TextField
             size="small"
             fullWidth
+            autoFocus
             placeholder="Your name"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}

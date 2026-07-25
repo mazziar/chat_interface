@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Stack, TextField, Button } from '@mui/material';
 import { useAppSelector } from '@/core/hooks';
 import { usePostMessageMutation } from '@/core/services/user/messagesApi';
@@ -9,6 +9,11 @@ export default function MessageForm() {
   const [message, setMessage] = useState('');
   const author = useAppSelector((state) => state.sessionSlice.name);
   const [postMessage, { isLoading }] = usePostMessageMutation();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isLoading) inputRef.current?.focus();
+  }, [isLoading]);
 
   const handleSend = async () => {
     if (!message.trim()) return;
@@ -29,6 +34,7 @@ export default function MessageForm() {
         placeholder="Type a message..."
         value={message}
         disabled={isLoading}
+        inputRef={inputRef}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {

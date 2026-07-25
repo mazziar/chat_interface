@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Box } from '@mui/material';
 import { useAppSelector } from '@/core/hooks';
 import MessageForm from './messageForm';
@@ -9,7 +11,15 @@ export default function ChatLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const router = useRouter();
   const isDarkTheme = useAppSelector((state) => state.settingSlice.darkTheme === 'ok');
+  const token = useAppSelector((state) => state.sessionSlice.token);
+
+  useEffect(() => {
+    if (!token) router.replace('/');
+  }, [token, router]);
+
+  if (!token) return null;
 
   return (
     <Box

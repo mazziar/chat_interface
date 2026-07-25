@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { Stack, Box, Typography, Skeleton } from '@mui/material';
 import { useAppSelector } from '@/core/hooks';
 import { useGetMessagesQuery } from '@/core/services/user/messagesApi';
@@ -23,6 +24,11 @@ const formatDateTime = (isoDate: string) => {
 export default function ChatPage() {
   const author = useAppSelector((state) => state.sessionSlice.name);
   const { data: messages, isLoading, isError } = useGetMessagesQuery();
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   if (isLoading) {
     return (
@@ -80,6 +86,8 @@ export default function ChatPage() {
           </Box>
         );
       })}
+
+      <div ref={bottomRef} />
     </Stack>
   );
 }
