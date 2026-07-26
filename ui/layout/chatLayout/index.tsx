@@ -33,7 +33,7 @@ export default function ChatLayout({
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <Box sx={{ flex: 1, overflowY: 'auto', p: 2, pt: 12 }}>
+      <Box data-chat-scroll-container sx={{ flex: 1, overflowY: 'auto', p: 2, pt: 12 }}>
         {children}
       </Box>
 
