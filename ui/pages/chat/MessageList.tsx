@@ -1,17 +1,18 @@
 'use client';
 
-import { useEffect, useLayoutEffect } from 'react';
 import type { RefObject } from 'react';
 import { max, min } from 'date-fns';
 import { Stack, Typography, Skeleton } from '@mui/material';
 import { useAppSelector } from '@/core/hooks';
 import { useGetMessagesQuery } from '@/core/services/user/messagesApi';
+import type { Message as MessageType } from '@/core/services/user/messagesApi/MessagesApi';
 import Message from './Message';
 import MessageOwn from './MessageOwn';
+import useScrollPosition from './hooks/useScrollPosition';
+import useBoxObserver from './hooks/useBoxObserver';
+import type { ScrollSnapshot } from './hooks/useScrollPosition';
 
 export type PageKind = 'before' | 'after';
-
-type ScrollSnapshot = { scrollHeight: number; scrollTop: number };
 
 type MessageListProps = {
   topRef: RefObject<HTMLDivElement | null>;
@@ -48,59 +49,39 @@ export default function MessageList({
     { refetchOnFocus: !!after && isLast }
   );
 
-  useLayoutEffect(() => {
-    if (!isFirst || !scrollSnapshotRef) return;
-
-    const container = topRef.current?.closest<HTMLElement>('[data-chat-scroll-container]');
-    if (!container) return;
-
-    const prev = scrollSnapshotRef.current;
-    if (prev && container.scrollHeight !== prev.scrollHeight) {
-      container.scrollTop = prev.scrollTop + (container.scrollHeight - prev.scrollHeight);
-    }
-
-    scrollSnapshotRef.current = { scrollHeight: container.scrollHeight, scrollTop: container.scrollTop };
+  useScrollPosition({
+    topRef,
+    bottomRef,
+    scrollSnapshotRef,
+    isFirst,
+    isLast,
+    after,
+    messages,
   });
 
-  useEffect(() => {
-    !!after && isLast && bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLast]);
-
-  useEffect(() => {
-    const topBox = topRef.current;
-    if (!isFirst || !topBox || !messages || messages.length !== LIMIT) return;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      const earliest = min(messages.map((msg) => new Date(msg.createdAt)));
-      if (entry.isIntersecting) {
-        const container = topBox.closest<HTMLElement>('[data-chat-scroll-container]');
-        if (container && scrollSnapshotRef) {
-          scrollSnapshotRef.current = { scrollHeight: container.scrollHeight, scrollTop: container.scrollTop };
-        }
-        addDate(earliest.toISOString());
+  useBoxObserver<MessageType>({
+    ref: topRef,
+    active: isFirst,
+    items: messages,
+    limit: LIMIT,
+    getDate: (msgs) => min(msgs.map((msg) => new Date(msg.createdAt))),
+    onIntersect: addDate,
+    onBeforeIntersect: () => {
+      const container = topRef.current?.closest<HTMLElement>('[data-chat-scroll-container]');
+      if (container && scrollSnapshotRef) {
+        scrollSnapshotRef.current = { scrollHeight: container.scrollHeight, scrollTop: container.scrollTop };
       }
-    });
+    },
+  });
 
-    observer.observe(topBox as any);
-
-    return () => observer.disconnect();
-  }, [topRef, messages, scrollSnapshotRef]);
-
-  useEffect(() => {
-    const bottomBox = bottomRef.current;
-    if (!isLast || !bottomBox || !messages || messages.length !== LIMIT) return;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        const latest = max(messages.map((msg) => new Date(msg.createdAt)));
-        addDate(latest.toISOString());
-      }
-    });
-
-    observer.observe(bottomBox);
-
-    return () => observer.disconnect();
-  }, [bottomRef, messages, before]);
+  useBoxObserver<MessageType>({
+    ref: bottomRef,
+    active: isLast,
+    items: messages,
+    limit: LIMIT,
+    getDate: (msgs) => max(msgs.map((msg) => new Date(msg.createdAt))),
+    onIntersect: addDate,
+  });
 
   if (isLoading) {
     if (after) return null;
