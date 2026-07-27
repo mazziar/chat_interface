@@ -49,7 +49,7 @@ export default function MessageList({
     { refetchOnFocus: !!after && isLast }
   );
 
-  useScrollPosition({
+  const { captureSnapshot } = useScrollPosition({
     topRef,
     bottomRef,
     scrollSnapshotRef,
@@ -66,12 +66,7 @@ export default function MessageList({
     limit: LIMIT,
     getDate: (msgs) => min(msgs.map((msg) => new Date(msg.createdAt))),
     onIntersect: addDate,
-    onBeforeIntersect: () => {
-      const container = topRef.current?.closest<HTMLElement>('[data-chat-scroll-container]');
-      if (container && scrollSnapshotRef) {
-        scrollSnapshotRef.current = { scrollHeight: container.scrollHeight, scrollTop: container.scrollTop };
-      }
-    },
+    onBeforeIntersect: captureSnapshot,
   });
 
   useBoxObserver<MessageType>({
